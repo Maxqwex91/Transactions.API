@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.DTOs.Input;
+using Models.DTOs.Output;
 using Services.Interfaces;
 
 namespace Transactions.API.Controllers
@@ -16,14 +17,14 @@ namespace Transactions.API.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> SignUpAsync([FromBody] SignUpDto userModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> SignUpAsync([FromBody] SignUpDto userModel, CancellationToken cancellationToken)
         {
             await _userService.SignUpUserAsync(userModel, cancellationToken);
             return Ok();
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> SignInAsync([FromBody] SignInDto userModel, CancellationToken cancellationToken)
+        public async Task<ActionResult<TokenDto>> SignInAsync([FromBody] SignInDto userModel, CancellationToken cancellationToken)
         {
             var jwt = await _userService.SignInUserAsync(userModel, cancellationToken);
             return Ok(jwt);

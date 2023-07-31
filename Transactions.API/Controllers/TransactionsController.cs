@@ -2,6 +2,7 @@
 using Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Models.DTOs.Input;
+using Domain.Entities;
 
 namespace Transactions.API.Controllers
 {
@@ -18,14 +19,14 @@ namespace Transactions.API.Controllers
         }
 
         [HttpPost("import-transactions-from-csv")]
-        public async Task<IActionResult> ImportTransactionsFromCsvAsync(IFormFile file, CancellationToken cancellationToken)
+        public async Task<ActionResult> ImportTransactionsFromCsvAsync(IFormFile file, CancellationToken cancellationToken)
         {
             await _transactionService.ImportTransactionsFromCsvAsync(file, cancellationToken);
             return Ok();
         }
 
         [HttpPost("update-transaction-by-id")]
-        public async Task<IActionResult> UpdateTransactionByIdAsync([FromQuery] RequestUpdateStatusDto updateStatusDto, CancellationToken cancellationToken)
+        public async Task<ActionResult> UpdateTransactionByIdAsync([FromQuery] RequestUpdateStatusDto updateStatusDto, CancellationToken cancellationToken)
         {
             await _transactionService.UpdateTransactionByIdAsync(updateStatusDto, cancellationToken);
             return Ok();
@@ -39,14 +40,14 @@ namespace Transactions.API.Controllers
         }
 
         [HttpGet("get-transactions-by-condition")]
-        public async Task<IActionResult> GetTransactionsByConditionAsync([FromQuery] RequestFiltersDto requestFilters, CancellationToken cancellationToken)
+        public async Task<ActionResult<List<Transaction>>> GetTransactionsByConditionAsync([FromQuery] RequestFiltersDto requestFilters, CancellationToken cancellationToken)
         {
             var tableData = await _transactionService.GetTransactionsByConditionAsync(requestFilters, cancellationToken);
             return Ok(tableData);
         }
 
         [HttpGet("get-transactions-of-client")]
-        public async Task<IActionResult> GetTransactionsOfClientAsync([FromQuery] string name, CancellationToken cancellationToken)
+        public async Task<ActionResult<List<Transaction>>> GetTransactionsOfClientAsync([FromQuery] string name, CancellationToken cancellationToken)
         {
             var tableData = await _transactionService.GetTransactionsOfClientNameAsync(name, cancellationToken);
             return Ok(tableData);
